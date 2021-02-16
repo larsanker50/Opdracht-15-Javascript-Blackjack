@@ -1,8 +1,8 @@
-.card {
+.playerCard, .dealerCard {
     display: inline-block;
-    width: 3.3em;
-    height: 4.6em;
-    border: 2px solid black;
+    width: 3.9em;
+    height: 5.6em;
+    border: 8px solid black;
     border-radius: .3em;
     -moz-border-radius: .3em;
     -webkit-border-radius: .3em;
@@ -18,4 +18,13 @@
     -moz-box-shadow: .2em .2em .5em #333;
     -webkit-box-shadow: .2em .2em .5em #333;
     box-shadow: .2em .2em .5em #333;
+    white-space: pre;
+}
+
+.brown {
+    background-color: brown;
+}
+
+.diamond, .heart {
+    border-color: firebrick;
 }
