@@ -5,20 +5,30 @@ const delenButton = document.getElementById("delenButton");
 const pasButton = document.getElementById("pasButton");
 const playerCard = document.getElementsByClassName("playerCard");
 const dealerCard = document.getElementsByClassName("dealerCard");
+const scorePlayerTable = document.getElementById("scorePlayerTable")
+const scoreDealerTable = document.getElementById("scoreDealerTable")
 let playerCardsArray = [];
 let dealerCardsArray = [];
 let usedCardsArray = [];
 let delenFunctionUsed = false;
 let amountPlayerCards = 0
 let amountDealerCards = 0
+let gameEnd = false
+let scorePlayer = 0
+let scoreDealer = 0
+let playerAceOne = false
+let dealerAceOne = false
 
-//dit is de delen knop functie
+//dit is de delen/hit knop functie
 delenButton.onclick = function() {
-  if (delenFunctionUsed == false) {
-    delenFunction();
+  if (gameEnd == false) {
+    if (delenFunctionUsed == false) {
+      delenFunction();
+    } else {
+      hitFunction();
+    };
   } else {
-    hitFunction();
-  };
+  }
 };
 
 
@@ -28,8 +38,8 @@ class Deck {
         this.value = value;
         this.symbol = symbol;
         this.rank = rank;
-    }
-  }
+    };
+  };
 
 let card1 = new Deck(2, "heart", 2);
 let card2 = new Deck(3, "heart", 3);
@@ -98,6 +108,21 @@ function randomPlayerCard() {
           playerCard[amountPlayerCards].classList.add(playerCardsArray[amountPlayerCards].symbol)
           console.log("player" + card);
           console.log(playerCardsArray)
+          scorePlayer = scorePlayer + playerCardsArray[amountPlayerCards].value
+          scorePlayerTable.innerHTML = scorePlayer
+          if (scorePlayer > 21 && playerAceOne == false) {
+            scorePlayer = 0
+            for (i = 0; i < playerCardsArray.length; i++) {
+              if (playerCardsArray[i].rank == "ace" ){
+                playerCardsArray[i].value = 1
+              } scorePlayer = scorePlayer + playerCardsArray[i].value
+            } scorePlayerTable.innerHTML = scorePlayer
+            playerAceOne = true
+          }
+          if (scorePlayer > 21 && playerAceOne == true) {
+            gameOverFunction()
+            gameEnd = true
+          }
           amountPlayerCards++
         } else if (usedCardsArray.length < 52){
           randomPlayerCard()
@@ -122,8 +147,26 @@ function randomDealerCard() {
             dealerCard[amountDealerCards].innerHTML = "secret"+"\n"+"secret";
             dealerCard[amountDealerCards].classList.add("brown")
           }
-          console.log("dealer" + card);
-          console.log(dealerCardsArray)
+          scoreDealer = scoreDealer + dealerCardsArray[amountDealerCards].value
+          if (scoreDealer > 21 && dealerAceOne == false) {
+            scoreDealer = 0
+            for (i = 0; i < dealerCardsArray.length; i++) {
+              if (dealerCardsArray[i].rank == "ace" ){
+                dealerCardsArray[i].value = 1
+              } scoreDealer = scoreDealer + dealerCardsArray[i].value
+            } scoreDealerTable.innerHTML = scoreDealer
+            DealerAceOne = true
+          }
+          if (scoreDealer >= 21 && dealerAceOne == true) {
+            gameOverFunction()
+            gameEnd = true
+          }
+          if (amountDealerCards > 1) {
+            scoreDealerTable.innerHTML = scoreDealer
+            dealerCard[0].innerHTML = ((dealerCardsArray[0].symbol)+",\n"+(dealerCardsArray[0].rank))
+            dealerCard[0].classList.add(dealerCardsArray[0].symbol)
+            dealerCard[0].classList.remove("brown")
+          }
           amountDealerCards++
         } else if (usedCardsArray.length < 52){
           randomDealerCard()
@@ -144,5 +187,30 @@ function delenFunction() {
 
 // dit is de functie voor de hitfunctieknop
 function hitFunction() {
+  randomPlayerCard();
+}
 
+// dit is de functie voor de pasfunctieknop
+pasButton.onclick = function() {
+  gameEnd = true;
+  while (scoreDealer < scorePlayer) {
+    randomDealerCard()
+  }
+  gameOverFunction()
+  
+}
+
+// dit is de game over functie
+function gameOverFunction() {
+  scoreDealerTable.innerHTML = scoreDealer
+  dealerCard[0].innerHTML = ((dealerCardsArray[0].symbol)+",\n"+(dealerCardsArray[0].rank))
+  dealerCard[0].classList.add(dealerCardsArray[0].symbol)
+  dealerCard[0].classList.remove("brown")
+  if (scorePlayer > 21 || scorePlayer < scoreDealer && scoreDealer < 22) {
+    document.getElementById("gameOverHTML").innerHTML = "Game Over, u heeft verloren"
+  } else if (scorePlayer == scoreDealer) {
+    document.getElementById("gameOverHTML").innerHTML = "Gelijkspel"
+  } else {
+    document.getElementById("gameOverHTML").innerHTML = "U heeft gewonnen!"
+  }
 }
