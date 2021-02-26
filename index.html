@@ -3,44 +3,46 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Opdracht 15:Javascript Blackjack</title>
+    <title>Opdracht 14: Javascript Mastermind</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <h1>Opdracht 15: Blackjack</h1>
-    <div id="gameOverHTML"></div>
-    <h2>Score</h2>
-    <div id="score">
-        <table>
-
-            <body>
-                <tr>
-                    <th>Player</th>
-                    <th>Dealer</th>
-                </tr>
-                <tr>
-                    <td id="scorePlayerTable"></td>
-                    <td id="scoreDealerTable"></td>
-                </tr>
-            </body>
-        </table>
+    <div>
+        <h1>Opdracht 14: Javascript Mastermind</h1>
+        <p>Spelregels:</p>
+        <ol>
+            <li>Het spel wordt gespeeld in 12 rondes. In dit spel is de speler de codebreker en de computer de
+                codemaker.
+            </li>
+            <li>De computer kiest in het geheim vier code-kleuren en plaatst deze in een gekozen volgorde. Dit kunnen
+                twee
+                of
+                meer pionnen in dezelfde kleur zijn. Dit is de verborgen code die de codebreker moet gaan
+                ontrafelen.<br>In
+                een
+                beurt plaatst de codebreker vier code-kleuren naar keuze in de eerste rij. Nu geeft de computer met
+                kleuren
+                het
+                resultaat in de controlekolommen:</li>
+            <div class="smallBreak"></div>
+            <ul>
+                <li>met rode kleuren: hoeveel kleuren staan op de juiste positie?</li>
+                <li>met witte kleuren: hoeveel kleuren komen wel in de code voor, maar staan niet op de juiste positie?
+                </li>
+                <div class="smallBreak"></div>
+            </ul>
+            <li>Met deze nieuwe informatie plaatst de codebreker vier volgende kleuren in de eerstvolgende rij.</li>
+        </ol>
+        <button id="button">Start / controleren</button>
+        <button onClick="window.location.reload();">Opnieuw proberen</button>
+        <div class="break"></div>
     </div>
-    <div class="witRegel"></div>
-    <button id="delenButton">Delen</button>
-    <!-- <div class="witRegel"></div>  dit doen in css-->
-    <button id="pasButton">Pas</button>
-    <div class="witRegel"></div>
-    <button onClick="window.location.reload();">Nieuw spel</button>
-    <h2>Playercards</h2>
-    <div id="playerCards">
-    </div>
-    <br>
-    <h2>Dealercards</h2>
-    <div id="dealerCards">
-    </div>
+    <div id="javascriptTable"></div>
+    <div class="break"></div>
+    <div id="controlTable"></div>
+    <div class="break"></div>
     <script type="text/javascript" src="script.js"></script>
 </body>
 
