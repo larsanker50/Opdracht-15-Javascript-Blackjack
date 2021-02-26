@@ -8,9 +8,9 @@ const dealerCard = document.getElementsByClassName("dealerCard");
 const scorePlayerTable = document.getElementById("scorePlayerTable");
 const scoreDealerTable = document.getElementById("scoreDealerTable");
 const gameOverHTML = document.getElementById("gameOverHTML");
-const playerCardsArray = [];
-const dealerCardsArray = [];
-const usedCardsArray = [];
+let playerCardsArray = [];
+let dealerCardsArray = [];
+let usedCardsArray = [];
 let amountPlayerCards = 0;
 let amountDealerCards = 0;
 let scorePlayer = 0;
@@ -20,14 +20,14 @@ let dealerAceOne = false;
 let delenFunctionUsed = false;
 let gameEnd = false;
 
-//dit stukje code maakt de kaart objecten aan in de Deck class              //loop maken uit de class halen. objecten.
+//dit stukje code maakt de kaart objecten aan in de Deck class
 class Deck {
-  constructor(value, symbol, rank) {
-    this.value = value;
-    this.symbol = symbol;
-    this.rank = rank;
+    constructor(value, symbol, rank) {
+        this.value = value;
+        this.symbol = symbol;
+        this.rank = rank;
+    };
   };
-};
 
 let card1 = new Deck(2, "heart", 2);
 let card2 = new Deck(3, "heart", 3);
@@ -82,98 +82,98 @@ let card50 = new Deck(10, "spade", "queen");
 let card51 = new Deck(10, "spade", "king");
 let card52 = new Deck(11, "spade", "ace");
 
-//dit stukje code pakt een willekeurige kaart voor de speler              //in verschillende functies zetten.
+//dit stukje code pakt een willekeurige kaart voor de speler
 function randomPlayerCard() {
-  let random = Math.floor((Math.random() * 52) + 1);
-  let card = ("card" + random);
-  if (usedCardsArray.includes(card.toString()) == false) {
-    playerCardsArray.push(eval(card));
-    usedCardsArray.push(card.toString());
-    //dit stukje code maakt nieuwe HTML kaarten aan.
-    let div = playerCards.appendChild(document.createElement("div"));
-    div.classList.add("playerCard");
-    playerCard[amountPlayerCards].innerHTML = ((playerCardsArray[amountPlayerCards].symbol) + ",\n" + (playerCardsArray[amountPlayerCards].rank));
-    playerCard[amountPlayerCards].classList.add(playerCardsArray[amountPlayerCards].symbol);
-    console.log("player" + card);
-    console.log(playerCardsArray);
-    scorePlayer = scorePlayer + playerCardsArray[amountPlayerCards].value;
-    scorePlayerTable.innerHTML = scorePlayer;
-    //dit stukje code maakt van ace 11 punten 1 punt
-    if (scorePlayer > 21 && playerAceOne == false) {
-      scorePlayer = 0;
-      for (i = 0; i < playerCardsArray.length; i++) {
-        if (playerCardsArray[i].rank == "ace") {
-          playerCardsArray[i].value = 1;
-        } scorePlayer = scorePlayer + playerCardsArray[i].value;
-      } scorePlayerTable.innerHTML = scorePlayer;
-      playerAceOne = true;
-    };
-    //dit stukje code bepaald het einde van de game
-    if (scorePlayer > 21 && playerAceOne == true || scorePlayer == 12 || scorePlayer == 21) {
-      gameOverFunction();
-      gameEnd = true;
-    };
-    amountPlayerCards++;
-  } else if (usedCardsArray.length < 52) {
-    randomPlayerCard();
-  } else {
-    alert("De kaarten zijn op");
+        let random = Math.floor((Math.random() * 52) + 1);
+        let card = ("card" + random);
+        if (usedCardsArray.includes(card.toString()) == false) {
+          playerCardsArray.push(eval(card));
+          usedCardsArray.push(card.toString());
+          //dit stukje code maakt nieuwe HTML kaarten aan.
+          let div = playerCards.appendChild(document.createElement("div"));
+          div.classList.add("playerCard");
+          playerCard[amountPlayerCards].innerHTML = ((playerCardsArray[amountPlayerCards].symbol)+",\n"+(playerCardsArray[amountPlayerCards].rank));
+          playerCard[amountPlayerCards].classList.add(playerCardsArray[amountPlayerCards].symbol);
+          console.log("player" + card);
+          console.log(playerCardsArray);
+          scorePlayer = scorePlayer + playerCardsArray[amountPlayerCards].value;
+          scorePlayerTable.innerHTML = scorePlayer;
+          //dit stukje code maakt van ace 11 punten 1 punt
+          if (scorePlayer > 21 && playerAceOne == false) {
+            scorePlayer = 0;
+            for (i = 0; i < playerCardsArray.length; i++) {
+              if (playerCardsArray[i].rank == "ace" ){
+                playerCardsArray[i].value = 1;
+              } scorePlayer = scorePlayer + playerCardsArray[i].value;
+            } scorePlayerTable.innerHTML = scorePlayer;
+            playerAceOne = true;
+          };
+          //dit stukje code bepaald het einde van de game
+          if (scorePlayer > 21 && playerAceOne == true || scorePlayer == 12 || scorePlayer == 21) {
+            gameOverFunction();
+            gameEnd = true;
+          };
+          amountPlayerCards++;
+        } else if (usedCardsArray.length < 52){
+          randomPlayerCard();
+        } else {
+          alert("De kaarten zijn op");
+        };
   };
-};
 
-//dit stukje code pakt een willekeurige kaart voor de dealer              //in verschillende functies zetten. kijken welke functies dubbel zijn.
+ //dit stukje code pakt een willekeurige kaart voor de dealer 
 function randomDealerCard() {
-  let random = Math.floor((Math.random() * 52) + 1);
-  let card = ("card" + random);
-  if (usedCardsArray.includes(card.toString()) == false) {
-    dealerCardsArray.push(eval(card));
-    usedCardsArray.push(card.toString());
-    //dit stukje code maakt nieuwe HTML kaarten aan.
-    let div = dealerCards.appendChild(document.createElement("div"));
-    div.classList.add("dealerCard");
-    if (amountDealerCards > 0) {
-      dealerCard[amountDealerCards].innerHTML = ((dealerCardsArray[amountDealerCards].symbol) + ",\n" + (dealerCardsArray[amountDealerCards].rank));
-      dealerCard[amountDealerCards].classList.add(dealerCardsArray[amountDealerCards].symbol);
-    } else {
-      dealerCard[amountDealerCards].innerHTML = "secret" + "\n" + "secret";
-      dealerCard[amountDealerCards].classList.add("brown");
-    };
-    //dit stukje code maakt van ace 11 punten 1 punt
-    scoreDealer = scoreDealer + dealerCardsArray[amountDealerCards].value;
-    if (scoreDealer > 21 && dealerAceOne == false) {
-      scoreDealer = 0;
-      for (i = 0; i < dealerCardsArray.length; i++) {
-        if (dealerCardsArray[i].rank == "ace") {
-          dealerCardsArray[i].value = 1;
-        } scoreDealer = scoreDealer + dealerCardsArray[i].value;
-      } scoreDealerTable.innerHTML = scoreDealer;
-      DealerAceOne = true;
-    };
-    //dit stukje code bepaald het einde van de game
-    if (scoreDealer >= 21 && dealerAceOne == true) {
-      gameOverFunction();
-      gameEnd = true;
-    };
-    //dit stukje code maakt de eeerste kaart onbekend
-    if (amountDealerCards > 1) {
-      scoreDealerTable.innerHTML = scoreDealer;
-      dealerCard[0].innerHTML = ((dealerCardsArray[0].symbol) + ",\n" + (dealerCardsArray[0].rank));
-      dealerCard[0].classList.add(dealerCardsArray[0].symbol);
-      dealerCard[0].classList.remove("brown");
-    };
-    amountDealerCards++;
-  } else if (usedCardsArray.length < 52) {
-    randomDealerCard();
-  } else {
-    alert("De kaarten zijn op");
-  };
-};
+        let random = Math.floor((Math.random() * 52) + 1);
+        let card = ("card" + random);
+        if (usedCardsArray.includes(card.toString()) == false) {
+          dealerCardsArray.push(eval(card));
+          usedCardsArray.push(card.toString());
+          //dit stukje code maakt nieuwe HTML kaarten aan.
+          let div = dealerCards.appendChild(document.createElement("div"));
+          div.classList.add("dealerCard");
+          if (amountDealerCards > 0) {
+            dealerCard[amountDealerCards].innerHTML = ((dealerCardsArray[amountDealerCards].symbol)+",\n"+(dealerCardsArray[amountDealerCards].rank));
+            dealerCard[amountDealerCards].classList.add(dealerCardsArray[amountDealerCards].symbol);
+          } else {
+            dealerCard[amountDealerCards].innerHTML = "secret"+"\n"+"secret";
+            dealerCard[amountDealerCards].classList.add("brown");
+          };
+          //dit stukje code maakt van ace 11 punten 1 punt
+          scoreDealer = scoreDealer + dealerCardsArray[amountDealerCards].value;
+          if (scoreDealer > 21 && dealerAceOne == false) {
+            scoreDealer = 0;
+            for (i = 0; i < dealerCardsArray.length; i++) {
+              if (dealerCardsArray[i].rank == "ace" ){
+                dealerCardsArray[i].value = 1;
+              } scoreDealer = scoreDealer + dealerCardsArray[i].value;
+            } scoreDealerTable.innerHTML = scoreDealer;
+            DealerAceOne = true;
+          };
+          //dit stukje code bepaald het einde van de game
+          if (scoreDealer >= 21 && dealerAceOne == true) {
+            gameOverFunction();
+            gameEnd = true;
+          };
+          //dit stukje code maakt de eeerste kaart onbekend
+          if (amountDealerCards > 1) {
+            scoreDealerTable.innerHTML = scoreDealer;
+            dealerCard[0].innerHTML = ((dealerCardsArray[0].symbol)+",\n"+(dealerCardsArray[0].rank));
+            dealerCard[0].classList.add(dealerCardsArray[0].symbol);
+            dealerCard[0].classList.remove("brown");
+          };
+          amountDealerCards++;
+        } else if (usedCardsArray.length < 52){
+          randomDealerCard();
+        } else {
+          alert("De kaarten zijn op");
+        };
+  };  
 
 //dit is de delen/hit knop functie
-delenButton.onclick = function () {
+delenButton.onclick = function() {
   if (gameEnd == false) {
     if (delenFunctionUsed == false) {
-      randomDealerCard();       // parameters gebruiken voor dubbele code 
+      randomDealerCard();
       randomDealerCard();
       randomPlayerCard();
       randomPlayerCard();
@@ -186,18 +186,18 @@ delenButton.onclick = function () {
 };
 
 // dit is de functie voor de pasfunctieknop
-pasButton.onclick = function () {
+pasButton.onclick = function() {
   gameEnd = true;
-  while (scoreDealer < 16 || scoreDealer == 16 && scorePlayer == 16) {
+  while (scoreDealer <= 16 || scoreDealer == 16 && scorePlayer == 16) {
     randomDealerCard();
   };
   gameOverFunction();
 };
 
-// dit is de game over functie                boel op nul zetten
+// dit is de game over functie
 function gameOverFunction() {
   scoreDealerTable.innerHTML = scoreDealer;
-  dealerCard[0].innerHTML = ((dealerCardsArray[0].symbol) + ",\n" + (dealerCardsArray[0].rank));
+  dealerCard[0].innerHTML = ((dealerCardsArray[0].symbol)+",\n"+(dealerCardsArray[0].rank));
   dealerCard[0].classList.add(dealerCardsArray[0].symbol);
   dealerCard[0].classList.remove("brown");
   if (scorePlayer > 21 || scorePlayer < scoreDealer && scoreDealer < 22 && scorePlayer != 12) {
