@@ -1,213 +1,212 @@
-// TODO :: use english variable and function names and camelCase
+const playerCards = document.getElementById("playerCards");
+const dealerCards = document.getElementById("dealerCards");
+const score = document.getElementById("score");
+const delenButton = document.getElementById("delenButton");
+const pasButton = document.getElementById("pasButton");
+const playerCard = document.getElementsByClassName("playerCard");
+const dealerCard = document.getElementsByClassName("dealerCard");
+const scorePlayerTable = document.getElementById("scorePlayerTable");
+const scoreDealerTable = document.getElementById("scoreDealerTable");
+const gameOverHTML = document.getElementById("gameOverHTML");
+const playerCardsArray = [];
+const dealerCardsArray = [];
+const usedCardsArray = [];
+let amountPlayerCards = 0;
+let amountDealerCards = 0;
+let scorePlayer = 0;
+let scoreDealer = 0;
+let playerAceOne = false;
+let dealerAceOne = false;
+let delenFunctionUsed = false;
+let gameEnd = false;
 
-// TODO :: no need to define aantalGoed here
-let AantalGoed = 0;
-let endGame = false;
-let beurt = 0;
-const playerArray = [];
-const gameOverArray = [];
-const myTableDiv = document.getElementById("javascriptTable");
-const controlTable = document.getElementById("controlTable");
-const table = document.createElement("table");
-const tableBody = document.createElement("tbody");
-
-//deze functie maakt een nieuwe beurt aan.
-function addBeurt() {
-  if (endGame) return console.log("Game is Over");
-  // TODO :: large if statement, can use beurt > 11 return
-  if (beurt < 12) {
-    // TODO :: this should be a const
-    let tr = document.createElement("tr");
-    tableBody.appendChild(tr);
-    for (let tableLength = 0; tableLength < 7; tableLength++) {
-      // TODO :: this should be a const
-      let td = document.createElement("td");
-      tr.appendChild(td);
-
-      if (tableLength == 0) {
-        let number = beurt + 1;
-        // TODO :: what do you mean with 'sel'?
-        let sel = td.appendChild(document.createElement("td"));
-        sel.innerHTML = number;
-        sel.classList.add("tableNumbers");
-      }
-
-      if (tableLength > 0 && tableLength < 5) {
-        let sel = td.appendChild(document.createElement("select"));
-        sel.classList.add("row" + beurt);
-        sel.classList.add("collumn" + tableLength);
-        sel.classList.add("colorSelector");
-        sel.style.backgroundColor = "Aqua";
-        sel.addEventListener("change", function () {
-          // TODO :: can use an array or an object
-          if (sel.value == 1) {
-            sel.style.backgroundColor = "Aqua";
-          } else if (sel.value == 2) {
-            sel.style.backgroundColor = "LimeGreen";
-          } else if (sel.value == 3) {
-            sel.style.backgroundColor = "yellow";
-          } else if (sel.value == 4) {
-            sel.style.backgroundColor = "Pink";
-          } else if (sel.value == 5) {
-            sel.style.backgroundColor = "SaddleBrown";
-          }
-        });
-
-        // TODO :: can use a for loop for this
-        let opt1 = td.appendChild(document.createElement("option"));
-        let opt2 = td.appendChild(document.createElement("option"));
-        let opt3 = td.appendChild(document.createElement("option"));
-        let opt4 = td.appendChild(document.createElement("option"));
-        let opt5 = td.appendChild(document.createElement("option"));
-
-        opt1.value = "1";
-        opt1.text = "Blauw";
-
-        opt2.value = "2";
-        opt2.text = "Groen";
-
-        opt3.value = "3";
-        opt3.text = "Geel";
-
-        opt4.value = "4";
-        opt4.text = "Roze";
-
-        opt5.value = "5";
-        opt5.text = "Bruin";
-
-        sel.add(opt1);
-        sel.add(opt2);
-        sel.add(opt3);
-        sel.add(opt4);
-        sel.add(opt5);
-      }
-      if (tableLength == 5) {
-        let sel = td.appendChild(document.createElement("td"));
-        sel.className = "white" + beurt;
-        sel.style.backgroundColor = "ghostWhite";
-        sel.classList.add("tableNumbers");
-      }
-      if (tableLength == 6) {
-        let sel = td.appendChild(document.createElement("td"));
-        sel.className = "red" + beurt;
-        sel.style.backgroundColor = "red";
-        sel.classList.add("tableNumbers");
-      }
-    }
-    // TODO :: no need for the if statement here
-    if (beurt <= 11) {
-      beurt++;
-    }
-  }
-  myTableDiv.appendChild(table);
-}
-
-//controlfunctie. controleert of de array goed is.
-function controlFunction(beurt) {
-  if (beurt > 0) {
-    playerArray.splice(0, playerArray.length);
-    for (let classNumber = 0; classNumber < 4; classNumber++) {
-      el = parseInt(
-        document.getElementsByClassName("row" + (beurt - 1))[classNumber].value
-      );
-      playerArray.push(el);
-    }
-  }
-  controlArray = [];
-  control = {
-    1: 0, //hoeveel white (dus juiste kleur maar niet op juiste plaats)
-    2: 0, // hoeveel red (dus juiste kleur op de juiste plek)
+//dit stukje code maakt de kaart objecten aan in de Deck class              //loop maken uit de class halen. objecten.
+class Deck {
+  constructor(value, symbol, rank) {
+    this.value = value;
+    this.symbol = symbol;
+    this.rank = rank;
   };
-  AantalGoed = 0;
-  for (ArrayLength = 0; ArrayLength < 4; ArrayLength++) {
-    if (
-      colorArray[ArrayLength] == playerArray[ArrayLength] &&
-      colorArray.includes(playerArray[ArrayLength])
-    ) {
-      controlArray.push("red");
-      control[2] = control[2] + 1;
-      AantalGoed++;
-    } else if (playerArray.includes(colorArray[ArrayLength])) {
-      controlArray.push("white");
-      control[1] = control[1] + 1;
-    }
-  }
-  if (beurt > 0) {
-    document.getElementsByClassName("white" + (beurt - 1))[0].innerHTML =
-      control[1];
-    document.getElementsByClassName("red" + (beurt - 1))[0].innerHTML =
-      control[2];
-    document.getElementsByClassName(
-      "white" + (beurt - 1)
-    )[0].style.backgroundColor = "ghostWhite";
-    document.getElementsByClassName(
-      "red" + (beurt - 1)
-    )[0].style.backgroundColor = "red";
-  }
-  if (AantalGoed >= 4) {
-    alert(
-      "Gefeliciteerd!!! je hebt gewonnen!! De juiste kleurencombinatie was " +
-        gameOverArray
-    );
-    endGame = true;
-    return;
-  }
-  if (beurt == 12 && colorArray !== playerArray) {
-    alert(
-      "Game Over. De juiste kleurencombinatie was " +
-        gameOverArray +
-        ". Probeer het eens opnieuw :)"
-    );
-  }
-}
-
-//deze functie maakt een willekeurige combinatie van 4 kleuren aan
-function addCombination() {
-  colorArray = [];
-  // TODO :: colors isn't being used anywhere else
-  colors = {
-    1: 0,
-    2: 0,
-    3: 0,
-    4: 0,
-    5: 0,
-  };
-  while (colorArray.length < 4) {
-    let random = Math.floor(Math.random() * 5 + 1);
-    colorArray.push(random);
-    colors[random] = colors[random] + 1;
-    // TODO :: use if else construction
-    if (random == 1) {
-      gameOverArray.push("blauw");
-    }
-    if (random == 2) {
-      gameOverArray.push("groen");
-    }
-    if (random == 3) {
-      gameOverArray.push("geel");
-    }
-    if (random == 4) {
-      gameOverArray.push("roze");
-    }
-    if (random == 5) {
-      gameOverArray.push("bruin");
-    }
-  }
-}
-
-//dit is de eventlistner voor de knop en roept 2 functies aan.
-document.getElementById("button").onclick = function () {
-  controlFunction(beurt);
-  addBeurt();
 };
 
-//hier start het script
-addCombination();
-table.appendChild(tableBody);
-console.log(colorArray);
+let card1 = new Deck(2, "heart", 2);
+let card2 = new Deck(3, "heart", 3);
+let card3 = new Deck(4, "heart", 4);
+let card4 = new Deck(5, "heart", 5);
+let card5 = new Deck(6, "heart", 6);
+let card6 = new Deck(7, "heart", 7);
+let card7 = new Deck(8, "heart", 8);
+let card8 = new Deck(9, "heart", 9);
+let card9 = new Deck(10, "heart", 10);
+let card10 = new Deck(10, "heart", "jack");
+let card11 = new Deck(10, "heart", "queen");
+let card12 = new Deck(10, "heart", "king");
+let card13 = new Deck(11, "heart", "ace");
+let card14 = new Deck(2, "club", 2);
+let card15 = new Deck(3, "club", 3);
+let card16 = new Deck(4, "club", 4);
+let card17 = new Deck(5, "club", 5);
+let card18 = new Deck(6, "club", 6);
+let card19 = new Deck(7, "club", 7);
+let card20 = new Deck(8, "club", 8);
+let card21 = new Deck(9, "club", 9);
+let card22 = new Deck(10, "club", 10);
+let card23 = new Deck(10, "club", "jack");
+let card24 = new Deck(10, "club", "queen");
+let card25 = new Deck(10, "club", "king");
+let card26 = new Deck(11, "club", "ace");
+let card27 = new Deck(2, "diamond", 2);
+let card28 = new Deck(3, "diamond", 3);
+let card29 = new Deck(4, "diamond", 4);
+let card30 = new Deck(5, "diamond", 5);
+let card31 = new Deck(6, "diamond", 6);
+let card32 = new Deck(7, "diamond", 7);
+let card33 = new Deck(8, "diamond", 8);
+let card34 = new Deck(9, "diamond", 9);
+let card35 = new Deck(10, "diamond", 10);
+let card36 = new Deck(10, "diamond", "jack");
+let card37 = new Deck(10, "diamond", "queen");
+let card38 = new Deck(10, "diamond", "king");
+let card39 = new Deck(11, "diamond", "ace");
+let card40 = new Deck(2, "spade", 2);
+let card41 = new Deck(3, "spade", 3);
+let card42 = new Deck(4, "spade", 4);
+let card43 = new Deck(5, "spade", 5);
+let card44 = new Deck(6, "spade", 6);
+let card45 = new Deck(7, "spade", 7);
+let card46 = new Deck(8, "spade", 8);
+let card47 = new Deck(9, "spade", 9);
+let card48 = new Deck(10, "spade", 10);
+let card49 = new Deck(10, "spade", "jack");
+let card50 = new Deck(10, "spade", "queen");
+let card51 = new Deck(10, "spade", "king");
+let card52 = new Deck(11, "spade", "ace");
 
-/* 1 = blue
-2 = green
-3 = yellow
-4 = pink
-5 = brown */
+//dit stukje code pakt een willekeurige kaart voor de speler              //in verschillende functies zetten.
+function randomPlayerCard() {
+  let random = Math.floor((Math.random() * 52) + 1);
+  let card = ("card" + random);
+  if (usedCardsArray.includes(card.toString()) == false) {
+    playerCardsArray.push(eval(card));
+    usedCardsArray.push(card.toString());
+    //dit stukje code maakt nieuwe HTML kaarten aan.
+    let div = playerCards.appendChild(document.createElement("div"));
+    div.classList.add("playerCard");
+    playerCard[amountPlayerCards].innerHTML = ((playerCardsArray[amountPlayerCards].symbol) + ",\n" + (playerCardsArray[amountPlayerCards].rank));
+    playerCard[amountPlayerCards].classList.add(playerCardsArray[amountPlayerCards].symbol);
+    console.log("player" + card);
+    console.log(playerCardsArray);
+    scorePlayer = scorePlayer + playerCardsArray[amountPlayerCards].value;
+    scorePlayerTable.innerHTML = scorePlayer;
+    //dit stukje code maakt van ace 11 punten 1 punt
+    if (scorePlayer > 21 && playerAceOne == false) {
+      scorePlayer = 0;
+      for (i = 0; i < playerCardsArray.length; i++) {
+        if (playerCardsArray[i].rank == "ace") {
+          playerCardsArray[i].value = 1;
+        } scorePlayer = scorePlayer + playerCardsArray[i].value;
+      } scorePlayerTable.innerHTML = scorePlayer;
+      playerAceOne = true;
+    };
+    //dit stukje code bepaald het einde van de game
+    if (scorePlayer > 21 && playerAceOne == true || scorePlayer == 12 || scorePlayer == 21) {
+      gameOverFunction();
+      gameEnd = true;
+    };
+    amountPlayerCards++;
+  } else if (usedCardsArray.length < 52) {
+    randomPlayerCard();
+  } else {
+    alert("De kaarten zijn op");
+  };
+};
+
+//dit stukje code pakt een willekeurige kaart voor de dealer              //in verschillende functies zetten. kijken welke functies dubbel zijn.
+function randomDealerCard() {
+  let random = Math.floor((Math.random() * 52) + 1);
+  let card = ("card" + random);
+  if (usedCardsArray.includes(card.toString()) == false) {
+    dealerCardsArray.push(eval(card));
+    usedCardsArray.push(card.toString());
+    //dit stukje code maakt nieuwe HTML kaarten aan.
+    let div = dealerCards.appendChild(document.createElement("div"));
+    div.classList.add("dealerCard");
+    if (amountDealerCards > 0) {
+      dealerCard[amountDealerCards].innerHTML = ((dealerCardsArray[amountDealerCards].symbol) + ",\n" + (dealerCardsArray[amountDealerCards].rank));
+      dealerCard[amountDealerCards].classList.add(dealerCardsArray[amountDealerCards].symbol);
+    } else {
+      dealerCard[amountDealerCards].innerHTML = "secret" + "\n" + "secret";
+      dealerCard[amountDealerCards].classList.add("brown");
+    };
+    //dit stukje code maakt van ace 11 punten 1 punt
+    scoreDealer = scoreDealer + dealerCardsArray[amountDealerCards].value;
+    if (scoreDealer > 21 && dealerAceOne == false) {
+      scoreDealer = 0;
+      for (i = 0; i < dealerCardsArray.length; i++) {
+        if (dealerCardsArray[i].rank == "ace") {
+          dealerCardsArray[i].value = 1;
+        } scoreDealer = scoreDealer + dealerCardsArray[i].value;
+      } scoreDealerTable.innerHTML = scoreDealer;
+      DealerAceOne = true;
+    };
+    //dit stukje code bepaald het einde van de game
+    if (scoreDealer >= 21 && dealerAceOne == true) {
+      gameOverFunction();
+      gameEnd = true;
+    };
+    //dit stukje code maakt de eeerste kaart onbekend
+    if (amountDealerCards > 1) {
+      scoreDealerTable.innerHTML = scoreDealer;
+      dealerCard[0].innerHTML = ((dealerCardsArray[0].symbol) + ",\n" + (dealerCardsArray[0].rank));
+      dealerCard[0].classList.add(dealerCardsArray[0].symbol);
+      dealerCard[0].classList.remove("brown");
+    };
+    amountDealerCards++;
+  } else if (usedCardsArray.length < 52) {
+    randomDealerCard();
+  } else {
+    alert("De kaarten zijn op");
+  };
+};
+
+//dit is de delen/hit knop functie
+delenButton.onclick = function () {
+  if (gameEnd == false) {
+    if (delenFunctionUsed == false) {
+      randomDealerCard();       // parameters gebruiken voor dubbele code 
+      randomDealerCard();
+      randomPlayerCard();
+      randomPlayerCard();
+      delenFunctionUsed = true;
+      delenButton.innerHTML = "Hit";
+    } else {
+      randomPlayerCard();
+    };
+  };
+};
+
+// dit is de functie voor de pasfunctieknop
+pasButton.onclick = function () {
+  gameEnd = true;
+  while (scoreDealer < 16 || scoreDealer == 16 && scorePlayer == 16) {
+    randomDealerCard();
+  };
+  gameOverFunction();
+};
+
+// dit is de game over functie                boel op nul zetten
+function gameOverFunction() {
+  scoreDealerTable.innerHTML = scoreDealer;
+  dealerCard[0].innerHTML = ((dealerCardsArray[0].symbol) + ",\n" + (dealerCardsArray[0].rank));
+  dealerCard[0].classList.add(dealerCardsArray[0].symbol);
+  dealerCard[0].classList.remove("brown");
+  if (scorePlayer > 21 || scorePlayer < scoreDealer && scoreDealer < 22 && scorePlayer != 12) {
+    gameOverHTML.innerHTML = "Game Over, u heeft verloren";
+    gameOverHTML.style.backgroundColor = "red";
+  } else if (scorePlayer == scoreDealer && scorePlayer != 0) {
+    gameOverHTML.innerHTML = "Gelijkspel";
+  } else {
+    gameOverHTML.innerHTML = "U heeft gewonnen!";
+    gameOverHTML.style.backgroundColor = "green";
+  };
+};
