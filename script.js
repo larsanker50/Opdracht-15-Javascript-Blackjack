@@ -54,18 +54,30 @@ for (cardNumber = 0; cardNumber <= 51; cardNumber++) {
 
 
 function randomPlayerCard() {
-  playerCardsArray.push(randomCard())
+  randomCard("player")
+  if (usedCardsArray.length < 52) {
   makeHTMLCard("player")
+  updateScore("player")
+  aceOnePoint("player")
+  } else {
+    alert("De kaarten zijn op")
+    return
+  }
 }
 
-function randomCard() {
+function randomCard(user) {
   let random = Math.floor((Math.random() * 52));
   let card = ("card" + (random + 1));
   if (usedCardsArray.includes(eval(card)) == false) {
-    usedCardsArray.push(card.toString())
-    return eval(card);
+    usedCardsArray.push(eval(card))
+    if (user == "player") {
+    playerCardsArray.push(eval(card))
+    }
+    if (user == "dealer") {
+      dealerCardsArray.push(eval(card))
+      }
   } else if (usedCardsArray.length < 52) {
-    randomCard()
+    randomCard(user)
   }
 }
 
@@ -75,32 +87,37 @@ function makeHTMLCard(user) {
       userCardString = "playerCard"
       cardsArray = playerCardsArray
       userCards = playerCards
+    } if (user == "dealer") {
+      userCard = dealerCard;
+      userCardString = "dealerCard"
+      cardsArray = dealerCardsArray
+      userCards = dealerCards
     }
     let div = userCards.appendChild(document.createElement("div"));
     div.classList.add(userCardString);
-    document.getElementsByClassName(userCardString)[playerCardsArray.length - 1].innerHTML = ((cardsArray[(cardsArray.length - 1)].symbol) + ",\n" + (cardsArray[(cardsArray.length - 1)].rank));
-    document.getElementsByClassName(userCardString)[playerCardsArray.length - 1].innerHTML.classList.add(cardsArray[(cardsArray.length - 1)].symbol);
+    document.getElementsByClassName(userCardString)[cardsArray.length - 1].innerHTML = ((cardsArray[(cardsArray.length - 1)].symbol) + ",\n" + (cardsArray[(cardsArray.length - 1)].rank));
+    userCard[cardsArray.length - 1].classList.add(cardsArray[cardsArray.length - 1].symbol)
 }
 
-function userScore() {
-    if (user == "player") {  
-      playerScore = playerScore + playerCardsArray[(cardsArray.length - 1)].value;
-      playerScoreTable.innerHTML = playerScore;
-    } else if (user == "dealer") {
 
+function updateScore(user) {
+  if (user == "player") {
+    cardsArray = playerCardsArray
+    userCards = playerCards
+    userScore = scorePlayer
+    userScoreTable = scorePlayerTable
+  }
+  userScoreTable.innerHTML = 0
+  for (i = 0; i < cardsArray.length; i++) {
+    if (cardsArray[i].rank == "ace" && userScoreTable.innerHTML > 21) {
+      cardsArray[i].value = 1;
+      userScore = userScore + cardsArray[i].value;
+      userScoreTable.innerHTML = userScore;
+     } else {
+      userScore = userScore + cardsArray[i].value;
+      userScoreTable.innerHTML = userScore;
     }
-    console.log(test)
-}
-
-function aceOnePoint(cardsArray, amountCardsUser, userCard, userCardString, userScore, userScoreTable) {
-  if (userScore > 21 && playerAceOne == false) {
-    userScore = 0;
-    for (i = 0; i < cardsArray.length; i++) {
-      if (cardsArray[i].rank == "ace") {
-        cardsArray[i].value = 1;
-      } userScore = userScore + userScore[i].value;
-    } userScoreTable.innerHTML = userScore;
-    playerAceOne = true;
+  }
 }
 
 
@@ -126,7 +143,6 @@ function aceOnePoint(cardsArray, amountCardsUser, userCard, userCardString, user
     alert("De kaarten zijn op");
   };
 }; */
-}
 //dit stukje code pakt een willekeurige kaart voor de dealer              //in verschillende functies zetten. kijken welke functies dubbel zijn.
 function randomDealerCard() {
   let random = Math.floor((Math.random() * 52));
@@ -182,8 +198,6 @@ delenButton.onclick = function () {
     if (delenFunctionUsed == false) {
       createCards();
       randomDealerCard();       // parameters gebruiken voor dubbele code 
-      randomDealerCard();
-      randomPlayerCard();
       randomPlayerCard();
       delenFunctionUsed = true;
       delenButton.innerHTML = "Hit";
