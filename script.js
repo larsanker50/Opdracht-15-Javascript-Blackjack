@@ -58,7 +58,6 @@ function randomPlayerCard() {
   if (usedCardsArray.length < 52) {
   makeHTMLCard("player")
   updateScore("player")
-  aceOnePoint("player")
   } else {
     alert("De kaarten zijn op")
     return
@@ -82,56 +81,55 @@ function randomCard(user) {
 }
 
 function makeHTMLCard(user) {
-    if (user == "player") {
-      userCard = playerCard;
-      userCardString = "playerCard"
-      cardsArray = playerCardsArray
-      userCards = playerCards
-    } if (user == "dealer") {
-      userCard = dealerCard;
-      userCardString = "dealerCard"
-      cardsArray = dealerCardsArray
-      userCards = dealerCards
-    }
-    let div = userCards.appendChild(document.createElement("div"));
-    div.classList.add(userCardString);
-    document.getElementsByClassName(userCardString)[cardsArray.length - 1].innerHTML = ((cardsArray[(cardsArray.length - 1)].symbol) + ",\n" + (cardsArray[(cardsArray.length - 1)].rank));
-    userCard[cardsArray.length - 1].classList.add(cardsArray[cardsArray.length - 1].symbol)
+  if (user == "player") {
+    userCard = playerCard;
+    userCardString = "playerCard"
+    cardsArray = playerCardsArray
+    userCards = playerCards
+  } if (user == "dealer") {
+    userCard = dealerCard;
+    userCardString = "dealerCard"
+    cardsArray = dealerCardsArray
+    userCards = dealerCards
+  }
+  let div = userCards.appendChild(document.createElement("div"));
+  div.classList.add(userCardString);
+  document.getElementsByClassName(userCardString)[cardsArray.length - 1].innerHTML = ((cardsArray[(cardsArray.length - 1)].symbol) + ",\n" + (cardsArray[(cardsArray.length - 1)].rank));
+  userCard[cardsArray.length - 1].classList.add(cardsArray[cardsArray.length - 1].symbol)
 }
 
 
 function updateScore(user) {
   if (user == "player") {
     cardsArray = playerCardsArray
-    userCards = playerCards
-    userScore = scorePlayer
     userScoreTable = scorePlayerTable
+    userScore = scorePlayer
   }
-  userScoreTable.innerHTML = 0
+  let tempScore = 0
   for (i = 0; i < cardsArray.length; i++) {
-    if (cardsArray[i].rank == "ace" && userScoreTable.innerHTML > 21) {
-      cardsArray[i].value = 1;
-      userScore = userScore + cardsArray[i].value;
-      userScoreTable.innerHTML = userScore;
-     } else {
-      userScore = userScore + cardsArray[i].value;
-      userScoreTable.innerHTML = userScore;
+    tempScore = tempScore + cardsArray[i].value
+    if (tempScore > 21) {
+      for (j = 0; j < cardsArray.length; j++) {
+        if (cardsArray[j].value == 11) {
+          cardsArray[j].value = 1;
+          i = 0
+          tempScore = 0
+        }
+
+      }
     }
+  }
+  userScoreTable.innerHTML = tempScore
+  if (user == "player") {
+    scorePlayer = tempScore
+  } else if (user == "dealer") {
+    scoreDealer = tempScore
   }
 }
 
 
-/*     //dit stukje code maakt van ace 11 punten 1 punt
-    if (scorePlayer > 21 && playerAceOne == false) {
-      scorePlayer = 0;
-      for (i = 0; i < playerCardsArray.length; i++) {
-        if (playerCardsArray[i].rank == "ace") {
-          playerCardsArray[i].value = 1;
-        } scorePlayer = scorePlayer + playerCardsArray[i].value;
-      } scorePlayerTable.innerHTML = scorePlayer;
-      playerAceOne = true;
-    };
-    //dit stukje code bepaald het einde van de game
+
+/*     //dit stukje code bepaald het einde van de game
     if (scorePlayer > 21 && playerAceOne == true || scorePlayer == 12 || scorePlayer == 21) {
       gameOverFunction();
       gameEnd = true;
