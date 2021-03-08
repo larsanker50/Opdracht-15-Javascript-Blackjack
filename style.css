@@ -30,10 +30,6 @@
     white-space: pre;
 }
 
-.brown {
-    background-color: brown;
-}
-
 .diamond, .heart {
     border-color: firebrick;
 
@@ -53,4 +49,9 @@ td, th {
 }
 th {
     font-weight: bold;
+}
+
+.brown {
+    background-color: brown;
+    border: 8px solid black;
 }
