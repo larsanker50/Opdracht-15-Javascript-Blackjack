@@ -10,6 +10,22 @@
 <body>
     <h1>Opdracht 15: Blackjack</h1>
     <div id="gameOverHTML"></div>
+    <h2>Wins</h2>
+    <div id="wins">
+        <table>
+
+            <body>
+                <tr>
+                    <th>Player</th>
+                    <th>Dealer</th>
+                </tr>
+                <tr>
+                    <td id="winsPlayerTable">0</td>
+                    <td id="winsDealerTable">0</td>
+                </tr>
+            </body>
+        </table>
+    </div>
     <h2>Score</h2>
     <div id="score">
         <table>
@@ -27,11 +43,11 @@
         </table>
     </div>
     <div class="witRegel"></div>
-    <button id="delenButton">Delen</button>
+    <button id="delenButton">Share</button>
     <!-- <div class="witRegel"></div>  dit doen in css-->
     <button id="pasButton">Pas</button>
     <div class="witRegel"></div>
-    <button onClick="window.location.reload();">Nieuw spel</button>
+    <button id="newGameButton">Try again</button>
     <h2>Playercards</h2>
     <div id="playerCards">
     </div>
