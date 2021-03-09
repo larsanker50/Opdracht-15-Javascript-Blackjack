@@ -1,7 +1,7 @@
 const playerCards = document.getElementById("playerCards");
 const dealerCards = document.getElementById("dealerCards");
 const score = document.getElementById("score");
-const delenButton = document.getElementById("delenButton");
+const shareButton = document.getElementById("shareButton");
 const pasButton = document.getElementById("pasButton");
 const playerCard = document.getElementsByClassName("playerCard");
 const dealerCard = document.getElementsByClassName("dealerCard");
@@ -10,7 +10,7 @@ const scoreDealerTable = document.getElementById("scoreDealerTable");
 const winsPlayerTable = document.getElementById("winsPlayerTable");
 const winsDealerTable = document.getElementById("winsDealerTable");
 const gameOverHTML = document.getElementById("gameOverHTML");
-const newGameButton = document.getElementById("newGameButton")
+const newGameButton = document.getElementById("newGameButton");
 const cardValues = [2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 11];
 const cardRanks = [2, 3, 4, 5, 6, 7, 8, 9, 10, "jack", "queen", "king", "ace"];
 const cardSymbols = ["heart", "club", "diamond", "spade"];
@@ -22,32 +22,33 @@ let scorePlayer = 0;
 let scoreDealer = 0;
 let playerAceOne = false;
 let dealerAceOne = false;
-let delenFunctionUsed = false;
+let shareFunctionUsed = false;
 let gameEnd = false;
 let pasButtonAvailable = false;
-let gameOverFunctionUsed = false;
+let pasButtonClicked = false;
 
 function createCards() {
-for (cardNumber = 0; cardNumber <= 51; cardNumber++) {
-  if (cards.length < 52) {
-    for (let symbolIndex = 0; symbolIndex < cardSymbols.length; symbolIndex++) {
-      for (let rankIndex = 0; rankIndex < cardRanks.length; rankIndex++) {
-        cardValue = cardValues[rankIndex];
-        cardRank = cardRanks[rankIndex];
-        cardSymbol = cardSymbols[symbolIndex];
-        window["card" + (cardNumber + 1)] = {
-          value: cardValue,
-          rank: cardRank,
-          symbol: cardSymbol
+  for (cardNumber = 0; cardNumber <= 51; cardNumber++) {
+    if (cards.length < 52) {
+      for (let symbolIndex = 0; symbolIndex < cardSymbols.length; symbolIndex++) {
+        for (let rankIndex = 0; rankIndex < cardRanks.length; rankIndex++) {
+          cardValue = cardValues[rankIndex];
+          cardRank = cardRanks[rankIndex];
+          cardSymbol = cardSymbols[symbolIndex];
+          window["card" + (cardNumber + 1)] = {
+            value: cardValue,
+            rank: cardRank,
+            symbol: cardSymbol
+          };
+          cards.push(eval("card" + (cardNumber + 1)));
         };
-        cards.push(eval("card" + (cardNumber + 1)));
       };
     };
+    for (amountCards = 0; amountCards < 52; amountCards++) {
+      window["card" + (amountCards + 1)] = cards[amountCards];
+    };
   };
-  for (amountCards = 0; amountCards < 52; amountCards++) {
-    window["card" + (amountCards + 1)] = cards[amountCards];
-  };
-}};
+};
 
 function randomDealerCard() {
   if (usedCardsArray.length < 52) {
@@ -56,7 +57,7 @@ function randomDealerCard() {
     updateScore("dealer");
     gameEndFunction("dealer");
   } else {
-    alert("De kaarten zijn op");
+    alert("there are no more cards left");
     return;
   };
 };
@@ -68,11 +69,10 @@ function randomPlayerCard() {
     updateScore("player");
     gameEndFunction("player");
   } else {
-    alert("De kaarten zijn op");
+    alert("there are no more cards left");
     return;
   };
 };
-
 
 function randomCard(user) {
   let random = Math.floor((Math.random() * 52));
@@ -109,8 +109,8 @@ function makeHTMLCard(user) {
   if (dealerCardsArray.length == 1);
   dealerCard[0].innerHTML = "secret" + "\n" + "secret";
   dealerCard[0].classList.add("brown");
+  dealerCard[0].classList.remove("heart", "diamond", "spade", "club");
 };
-
 
 function updateScore(user) {
   if (user == "player") {
@@ -167,49 +167,54 @@ function gameEndFunction(user) {
     userScore = scoreDealer;
     userAceOne = dealerAceOne;
   };
-  if (userScore > 21 && userAceOne == true || userScore == 12 || userScore == 21) {
-    while (scoreDealer < 16 && scoreDealer <= scorePlayer || scoreDealer == 16 && scorePlayer == 16) {
-      randomDealerCard();
-    };
+  if (userScore > 21 && userAceOne == true || userScore == 12 || userScore == 21 || pasButtonClicked == true) {
     gameEnd = true;
+    while (scoreDealer < 16 && scoreDealer <= scorePlayer || scoreDealer == 16 && scorePlayer == 16) {
+      randomCard("dealer");
+      makeHTMLCard("dealer");
+      updateScore("dealer");
+    };
     gameOverFunction();
   };
 };
 
 function gameOverFunction() {
-  if (gameOverFunctionUsed) {return}
   dealerCard[0].innerHTML = ((dealerCardsArray[0].symbol) + ",\n" + (dealerCardsArray[0].rank));
   dealerCard[0].classList.add(dealerCardsArray[0].symbol);
   dealerCard[0].classList.remove("brown");
   if (scorePlayer > 21 || scorePlayer < scoreDealer && scoreDealer < 22 && scorePlayer != 12) {
-    gameOverHTML.innerHTML = "Game Over, u heeft verloren";
+    gameOverHTML.innerHTML = "Game Over, you lost";
     gameOverHTML.style.backgroundColor = "red";
-    winsDealerTable.innerHTML++
+    winsDealerTable.innerHTML++;
   } else if (scorePlayer == scoreDealer && scorePlayer != 0) {
-    gameOverHTML.innerHTML = "Gelijkspel";
+    gameOverHTML.innerHTML = "Draw";
     gameOverHTML.style.backgroundColor = "gray";
   } else {
-    gameOverHTML.innerHTML = "U heeft gewonnen!";
+    gameOverHTML.innerHTML = "You have won!";
     gameOverHTML.style.backgroundColor = "green";
-    winsPlayerTable.innerHTML++
-    console.log(winsPlayerTable.innerHTML)
+    winsPlayerTable.innerHTML++;
   };
   if (winsPlayerTable.innerHTML > winsDealerTable.innerHTML) {
-    winsPlayerTable.style.backgroundColor = "#4dff4d"
-    winsDealerTable.style.backgroundColor = "#ff4d4d"
+    winsPlayerTable.style.backgroundColor = "#4dff4d";
+    winsDealerTable.style.backgroundColor = "#ff4d4d";
   } else if (winsDealerTable.innerHTML > winsPlayerTable.innerHTML){
-    winsPlayerTable.style.backgroundColor = "#ff4d4d"
-    winsDealerTable.style.backgroundColor = "#4dff4d"
+    winsPlayerTable.style.backgroundColor = "#ff4d4d";
+    winsDealerTable.style.backgroundColor = "#4dff4d";
   } else {
-    winsPlayerTable.style.backgroundColor = "#ffffff"
-    winsDealerTable.style.backgroundColor = "#ffffff"
-  }
-  gameOverFunctionUsed = true
+    winsPlayerTable.style.backgroundColor = "Silver";
+    winsDealerTable.style.backgroundColor = "Silver";
+  };
+  gameOverFunctionUsed = true;
+  newGameButton.style.backgroundColor = "#4CAF50"
+  pasButton.style.backgroundColor = "#ff4d4d"
+  shareButton.style.backgroundColor = "#ff4d4d"
 };
 
-delenButton.onclick = function () {
+shareButton.onclick = function () {
   if (gameEnd == false) {
-    if (delenFunctionUsed == false) {
+    newGameButton.style.backgroundColor = "#ff4d4d"
+    pasButton.style.backgroundColor = "#4CAF50";
+    if (shareFunctionUsed == false) {
       createCards();
       while (dealerCardsArray.length != 2) {
         randomDealerCard();
@@ -217,9 +222,9 @@ delenButton.onclick = function () {
       while (playerCardsArray.length != 2) {
         randomPlayerCard();
       };
-      delenFunctionUsed = true;
+      shareFunctionUsed = true;
       pasButtonAvailable = true;
-      delenButton.innerHTML = "Hit";
+      shareButton.innerHTML = "Hit";
     } else {
       randomPlayerCard();
     };
@@ -229,25 +234,21 @@ delenButton.onclick = function () {
 pasButton.onclick = function () {
   if (gameEnd == true || pasButtonAvailable == false) { return };
   gameEnd = true;
-  updateScore("dealer")
-  while (scoreDealer < 16 && scoreDealer <= scorePlayer || scoreDealer == 16 && scorePlayer == 16) {
-    console.log("passbutton roep randomdealerkaart aan")
-    randomDealerCard();
-  };
-  console.log("passbutton roep gameoverFunction aan")
-  gameOverFunction()
+  pasButtonClicked = true;
+  updateScore("dealer");
+  gameEndFunction("dealer");
 };
 
 newGameButton.onclick = function () {
   if (gameEnd == true) {
-    delenButton.innerHTML = "Share"
-    gameOverHTML.innerHTML = ""
-    playerCards.innerHTML = ""
-    dealerCards.innerHTML = ""
-    scorePlayerTable.innerHTML = 0
-    scoreDealerTable.innerHTML = 0
-    playerCardsArray.length = 0
-    dealerCardsArray.length = 0
+    shareButton.innerHTML = "Share";
+    gameOverHTML.innerHTML = "";
+    playerCards.innerHTML = "";
+    dealerCards.innerHTML = "";
+    scorePlayerTable.innerHTML = 0;
+    scoreDealerTable.innerHTML = 0;
+    playerCardsArray.length = 0;
+    dealerCardsArray.length = 0;
     usedCardsArray.length = 0;
     cards.length = 0;
     scorePlayer = 0;
@@ -255,8 +256,15 @@ newGameButton.onclick = function () {
     playerAceOne = false;
     dealerAceOne = false;
     pasButtonAvailable = false;
-    delenFunctionUsed = false;
-    gameOverFunctionUsed = false;
+    pasButtonClicked = false;
+    shareFunctionUsed = false;
+    gameOverHTML.style.backgroundColor = "white";
     gameEnd = false;
-  }
-}
+    newGameButton.style.backgroundColor = "#ff4d4d";
+    pasButton.style.backgroundColor = "#4CAF50";
+    shareButton.style.backgroundColor = "#4CAF50";
+  };
+};
+
+pasButton.style.backgroundColor = "#ff4d4d";
+newGameButton.style.backgroundColor = "#ff4d4d";
